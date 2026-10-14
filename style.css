@@ -1,91 +1,241 @@
+:root {
+	--page-bg: #dfe3e8;
+	--panel-bg: #1c1c1e;
+	--panel-text: #ffffff;
+	--number-bg: #d1d5db;
+	--number-text: #111111;
+	--operator-bg: #f59e0b;
+	--operator-text: #ffffff;
+	--utility-bg: #a1a1aa;
+	--utility-text: #111111;
+	--button-bg: rgba(255, 255, 255, 0.6);
+	--button-text: #1c1c1e;
+	--heading-color: #1c1c1e;
+}
+
 body {
 	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: "SF Pro Display", "Segoe UI", sans-serif;
+	background: var(--page-bg);
 }
+
+body[data-theme="light"] {
+	--page-bg: #f5f5f5;
+	--panel-bg: #ffffff;
+	--panel-text: #111111;
+	--number-bg: #e5e7eb;
+	--number-text: #111111;
+	--operator-bg: #f59e0b;
+	--operator-text: #ffffff;
+	--utility-bg: #d4d4d8;
+	--utility-text: #111111;
+	--button-bg: rgba(255, 255, 255, 0.9);
+	--button-text: #111111;
+	--heading-color: #111111;
+}
+
+body[data-theme="dark"] {
+	--page-bg: #111827;
+	--panel-bg: #1c1c1e;
+	--panel-text: #ffffff;
+	--number-bg: #d1d5db;
+	--number-text: #111111;
+	--operator-bg: #f59e0b;
+	--operator-text: #ffffff;
+	--utility-bg: #a1a1aa;
+	--utility-text: #111111;
+	--button-bg: rgba(255, 255, 255, 0.06);
+	--button-text: #ffffff;
+	--heading-color: #ffffff;
+}
+
 .container {
-	width: 90%;
-	margin: auto;
-	margin-top: 20px;
+	width: min(100vw, 420px);
+	padding: 18px 16px 30px;
+	box-sizing: border-box;
 }
+
 button#change-theme {
-	margin: 20px 60px;
-	padding: 8px;
-	background-color: transparent;
-	border: 2px solid #aaa;
-	border-radius: 5px;
+	display: block;
+	margin: 0 auto 18px;
+	padding: 8px 16px;
+	background: var(--button-bg);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 999px;
 	cursor: pointer;
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: var(--button-text);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
+
 .calculator {
-	width: 375px;
+	width: 100%;
 	margin: auto;
 	display: grid;
 	grid-template-rows: auto auto;
-	row-gap: 5px;
-	border: 2px solid #aaa;
-	border-radius: 5px;
-	padding: 10px;
+	row-gap: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 32px;
+	padding: 18px 16px 16px;
+	box-sizing: border-box;
+	background: var(--panel-bg);
+	box-shadow: 0 22px 40px rgba(0, 0, 0, 0.18);
 }
+
 .calculator .display {
-	padding-top: 80px;
+	padding: 12px 4px 0;
 }
+
 .calculator .display input {
 	width: 100%;
 	box-sizing: border-box;
 	border: 0;
-	border-bottom: 1px solid #aaa;
-	padding: 10px;
-	margin: 10px 0px;
-	text-align: end;
-	font-size: 36px;
-	background-color: transparent;
+	padding: 10px 4px 18px;
+	margin: 0;
+	text-align: right;
+	font-size: clamp(2.6rem, 10vw, 4rem);
+	font-weight: 300;
+	letter-spacing: -0.05em;
+	background: transparent;
+	color: var(--panel-text);
 }
+
 .calculator .calc-body {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 82px;
+	gap: 12px;
+	align-items: stretch;
 }
+
 .calculator .calc-body .numbers-and-functions {
 	display: grid;
 	grid-template-rows: auto auto;
-	row-gap: 4px;
+	row-gap: 10px;
+	min-width: 0;
 }
+
+.calculator .calc-body .numbers-and-functions .clear-and-moldevision,
+.calculator .calc-body .numbers-and-functions .numbers,
+.calculator .calc-body .operations {
+	justify-items: center;
+}
+
 .calculator .calc-body .numbers-and-functions .clear-and-moldevision {
 	display: grid;
-	grid-template-columns: auto auto auto;
-	column-gap: 4px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: 10px;
 }
+
 .calculator .calc-body .numbers-and-functions .numbers {
 	display: grid;
-	grid-template-columns: auto auto auto;
-	column-gap: 4px;
-	row-gap: 4px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: 10px;
+	row-gap: 10px;
 }
+
 .calculator .calc-body .operations {
 	display: grid;
-	grid-template-columns: auto;
-	row-gap: 4px;
+	grid-template-columns: 1fr;
+	row-gap: 10px;
 }
+
 .calculator .calc-body input {
-	width: 75px;
-	height: 55px;
-	font-size: 30px;
-	box-sizing: content-box;
-	background-color: transparent;
+	width: 62px;
+	height: 62px;
+	font-size: clamp(1.3rem, 3vw, 2rem);
+	box-sizing: border-box;
+	background: #333;
 	border: 0;
-	border: 1px solid #aaa;
-	border-radius: 3px;
+	border-radius: 50%;
 	cursor: pointer;
+	color: #fff;
+	font-weight: 500;
+	padding: 0;
+	transition: opacity 0.15s ease, transform 0.15s ease;
+	justify-self: center;
+	align-self: center;
 }
+
+.calculator .calc-body input:active {
+	transform: scale(0.98);
+	opacity: 0.9;
+}
+
 .calculator .calc-body input:hover {
-	background-color: #ff89534f;
+	background-color: #4a4a4a;
 }
+
 .calculator .calc-body .operations input,
 .calculator .calc-body .numbers-and-functions .clear-and-moldevision input {
-	color: #ff7433;
-	font-weight: 600;
+	background: var(--operator-bg);
+	color: var(--operator-text);
 }
+
+.calculator .calc-body .numbers-and-functions .numbers input:not(#negate) {
+	background: var(--number-bg);
+	color: var(--number-text);
+}
+
+.calculator .calc-body .numbers-and-functions .numbers input#negate {
+	background: var(--number-bg);
+	color: var(--number-text);
+	opacity: 0.55;
+}
+
 .calculator .calc-body .operations input:last-child {
-	background-color: #ff7433;
-	color: #fff;
+	background: var(--operator-bg);
+	color: var(--operator-text);
 }
+
+.calculator .calc-body .numbers-and-functions .clear-and-moldevision input[value='C'] {
+	background: var(--utility-bg);
+	color: var(--utility-text);
+}
+
+.calculator .calc-body .numbers-and-functions .clear-and-moldevision input[value='⟵'] {
+	background: var(--utility-bg);
+	color: var(--utility-text);
+}
+
+.calculator .calc-body .numbers-and-functions .clear-and-moldevision input[value='%'] {
+	background: var(--operator-bg);
+	color: var(--operator-text);
+}
+
 h4 {
 	text-align: center;
+	margin: 18px auto 0;
+	font-weight: 500;
+	color: var(--heading-color);
+	font-size: 0.9rem;
+}
+
+@media (max-width: 420px) {
+	.container {
+		padding: 10px 12px 18px;
+	}
+
+	button#change-theme {
+		margin-bottom: 12px;
+	}
+
+	.calculator {
+		border-radius: 26px;
+		padding: 16px 12px 12px;
+	}
+
+	.calculator .calc-body {
+		grid-template-columns: minmax(0, 1fr) 72px;
+		gap: 8px;
+	}
+
+	.calculator .calc-body input {
+		height: 56px;
+		width: 56px;
+	}
 }

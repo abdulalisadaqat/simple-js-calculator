@@ -1,150 +1,164 @@
-var clear = document.querySelector("input#clear");
-var backspace = document.querySelector("input#backspace");
-var inputs = document.querySelectorAll(
+const clearButton = document.querySelector("input#clear");
+const backspaceButton = document.querySelector("input#backspace");
+const numberButtons = document.querySelectorAll(
 	".calc-body input:not(#clear, #backspace, #negate, #calculate)"
 );
-var operations = document.querySelectorAll(
+const operationButtons = document.querySelectorAll(
 	".calc-body .operations input:not(#calculate), .calc-body .clear-and-moldevision input[value='%']"
 );
-// var negate = document.querySelector(".calc-body .numbers input#negate");
-var calculate = document.querySelector("input#calculate");
-var result = document.querySelector("#result");
+const calculateButton = document.querySelector("input#calculate");
+const result = document.querySelector("#result");
 
-// ================ getting inputs ================
-for (i = 0; i < inputs.length; i++) {
-	inputs[i].addEventListener("click", function () {
-		result.value += this.value;
-		// console.log(result.value);
+const operators = ["+", "-", "*", "/", "%"];
+let operator = "";
+
+function isOperator(value) {
+	return operators.includes(value);
+}
+
+function appendValue(value) {
+	if (!result) return;
+
+	if (isOperator(value)) {
+		const lastChar = result.value.slice(-1);
+		const hasNumberBefore = result.value && !isOperator(lastChar);
+		const hasOperatorAlready = /[+\-*/%]/.test(result.value.slice(-1));
+		if (!result.value || !hasNumberBefore || hasOperatorAlready) {
+			return;
+		}
+		operator = value;
+		result.value += value;
+		return;
+	}
+
+	if (value === ".") {
+		const lastChar = result.value.slice(-1);
+		const currentPart = result.value.split(/[+\-*/%]/).pop();
+		if (currentPart && currentPart.includes(".")) {
+			return;
+		}
+		if (!result.value || isOperator(lastChar)) {
+			result.value += "0.";
+			return;
+		}
+	}
+
+	if (result.value === "0" && !isOperator(value) && value !== ".") {
+		result.value = value;
+		return;
+	}
+
+	result.value += value;
+}
+
+numberButtons.forEach((button) => {
+	button.addEventListener("click", () => {
+		appendValue(button.value);
+	});
+});
+
+operationButtons.forEach((button) => {
+	button.addEventListener("click", () => {
+		appendValue(button.value);
+	});
+});
+
+if (clearButton) {
+	clearButton.addEventListener("click", () => {
+		result.value = "";
+		operator = "";
 	});
 }
 
-// ================ clear function ================
-clear.addEventListener("click", function () {
-	result.value = "";
-});
-
-// ================ backspace function ================
-backspace.addEventListener("click", function () {
-	if (result.value != "") {
-		result.value = result.value.slice(0, -1);
-	}
-	// console.log(result.value);
-});
-
-// ================ operator detection ================
-var operator;
-operations.forEach((element) => {
-	element.addEventListener("click", function () {
-		operator = element.value;
-		// console.log(operator);
+if (backspaceButton && result) {
+	backspaceButton.addEventListener("click", () => {
+		if (result.value) {
+			result.value = result.value.slice(0, -1);
+		}
 	});
-});
+}
 
-// ================ result calculation ================
-var firstNumber;
-var secondNumber;
-calculate.addEventListener("click", function () {
-	switch (operator) {
-		// ================ case + ================
-		case "+":
-			var addition = result.value.split("+");
-			for (i = 0; i < addition.length; i++) {
-				firstNumber = Number(addition[0]);
-				secondNumber = Number(addition[1]);
-			}
-			result.value = firstNumber + secondNumber;
-			break;
+if (calculateButton && result) {
+	calculateButton.addEventListener("click", () => {
+		if (!operator || !result.value.includes(operator)) {
+			return;
+		}
 
-		// ================ case - ================
-		case "-":
-			var subtraction = result.value.split("-");
-			for (i = 0; i < subtraction.length; i++) {
-				firstNumber = Number(subtraction[0]);
-				secondNumber = Number(subtraction[1]);
-			}
-			result.value = firstNumber - secondNumber;
-			break;
+		const [leftValue, rightValue] = result.value.split(operator);
+		if (!leftValue || !rightValue || rightValue === "") {
+			return;
+		}
 
-		// ================ case * ================
-		case "*":
-			var multiplication = result.value.split("*");
-			for (i = 0; i < multiplication.length; i++) {
-				firstNumber = Number(multiplication[0]);
-				secondNumber = Number(multiplication[1]);
-			}
-			result.value = firstNumber * secondNumber;
-			break;
+		const firstNumber = Number(leftValue);
+		const secondNumber = Number(rightValue);
 
-		// ================ case / ================
-		case "/":
-			var division = result.value.split("/");
-			for (i = 0; i < division.length; i++) {
-				firstNumber = Number(division[0]);
-				secondNumber = Number(division[1]);
-			}
-			if (secondNumber != 0) {
+		if (Number.isNaN(firstNumber) || Number.isNaN(secondNumber)) {
+			return;
+		}
+
+		switch (operator) {
+			case "+":
+				result.value = firstNumber + secondNumber;
+				break;
+			case "-":
+				result.value = firstNumber - secondNumber;
+				break;
+			case "*":
+				result.value = firstNumber * secondNumber;
+				break;
+			case "/":
+				if (secondNumber === 0) {
+					alert("can not divide by zero!");
+					return;
+				}
 				result.value = firstNumber / secondNumber;
-			} else {
-				alert("can not divide by zero!");
-			}
-			break;
-
-		// ================ case % ================
-		case "%":
-			var remainder = result.value.split("%");
-			for (i = 0; i < remainder.length; i++) {
-				firstNumber = Number(remainder[0]);
-				secondNumber = Number(remainder[1]);
-			}
-			if (secondNumber != 0) {
+				break;
+			case "%":
+				if (secondNumber === 0) {
+					alert("can not divide by zero!");
+					return;
+				}
 				result.value = firstNumber % secondNumber;
-			} else {
-				alert("can not divide by zero!");
-			}
-			break;
-	}
-});
+				break;
+			default:
+				return;
+		}
 
-//
-//
-//
-//
-//
-//
-// ============== change theme ==============
-var inputs_theme = document.querySelectorAll(
-	".calc-body .numbers input, .display input"
-);
-
-var theme = localStorage.getItem("saved_theme");
-if (theme == null) {
-	theme = "light";
-	localStorage.setItem("saved_theme", theme);
+		operator = "";
+	});
 }
+
+const themeButton = document.querySelector("#change-theme");
+const heading = document.querySelector("h4");
+const resultInput = document.querySelector(".display input");
+
+let theme = localStorage.getItem("saved_theme") || "dark";
+localStorage.setItem("saved_theme", theme);
+
 setTheme(theme);
 
-document.querySelector("#change-theme").addEventListener("click", function () {
-	theme = theme == "light" ? "dark" : "light";
-	setTheme(theme);
-	localStorage.setItem("saved_theme", theme);
-});
+if (themeButton) {
+	themeButton.addEventListener("click", function () {
+		theme = theme === "light" ? "dark" : "light";
+		setTheme(theme);
+		localStorage.setItem("saved_theme", theme);
+	});
+}
 
-function setTheme(theme) {
-	if (theme == "light") {
-		document.querySelector("body").style.backgroundColor = "#ffffff";
-		document.querySelector("button#change-theme").style.color = "#000";
-		document.querySelector("h4").style.color = "#000";
+function setTheme(themeValue) {
+	document.body.setAttribute("data-theme", themeValue);
 
-		inputs_theme.forEach((input) => {
-			input.style.color = "#000";
-		});
-	} else {
-		document.querySelector("body").style.backgroundColor = "#222222";
-		document.querySelector("button#change-theme").style.color = "#fff";
-		document.querySelector("h4").style.color = "#fff";
+	if (themeButton) {
+		themeButton.style.color = themeValue === "light" ? "#111" : "#fff";
+		themeButton.style.backgroundColor =
+			themeValue === "light" ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.06)";
+	}
 
-		inputs_theme.forEach((input) => {
-			input.style.color = "#fff";
-		});
+	if (heading) {
+		heading.style.color = themeValue === "light" ? "#111" : "#fff";
+	}
+
+	if (resultInput) {
+		resultInput.style.color = themeValue === "light" ? "#111" : "#fff";
 	}
 }
