@@ -18,7 +18,7 @@ A simple calculator app built with HTML, CSS, and JavaScript. It supports basic 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/calculator.git
+   git clone https://github.com/abdulalisadaqat/simple-js-calculator.git
    ```
 2. Open `index.html` in your browser
 
